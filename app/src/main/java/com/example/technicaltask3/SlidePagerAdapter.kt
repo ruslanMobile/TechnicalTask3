@@ -6,7 +6,13 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
 
-class SlidePagerAdapter(fa: FragmentActivity, var list: List<Fragment>) : FragmentStateAdapter(fa) {
+class SlidePagerAdapter(fa: FragmentActivity, private var list: List<Fragment>) : FragmentStateAdapter(fa) {
+
+    fun newList(newList:List<Fragment>){
+        list = newList
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int = list.size
 
     override fun createFragment(position: Int): Fragment {
