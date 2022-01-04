@@ -6,9 +6,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
 
-class SlidePagerAdapter(fa: FragmentActivity, private var list: List<Fragment>) : FragmentStateAdapter(fa) {
+class SlidePagerAdapter(fa: FragmentActivity, private var list: List<SlidePageFragment>) : FragmentStateAdapter(fa) {
 
-    fun newList(newList:List<Fragment>){
+    fun newList(newList:List<SlidePageFragment>){
         list = newList
         notifyDataSetChanged()
     }

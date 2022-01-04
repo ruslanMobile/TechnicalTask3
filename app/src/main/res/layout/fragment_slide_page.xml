@@ -9,7 +9,7 @@
 
 
     <Button
-        android:id="@+id/bbuttonCreateNotification"
+        android:id="@+id/buttonCreateNotification"
         android:layout_width="170dp"
         android:layout_height="170dp"
         android:background="@drawable/background_notification"
