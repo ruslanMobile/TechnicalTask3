@@ -16,7 +16,6 @@ class SlidePagerAdapter(fa: FragmentActivity, private var list: List<SlidePageFr
     override fun getItemCount(): Int = list.size
 
     override fun createFragment(position: Int): Fragment {
-        Log.d("MyLog","Hello")
         return list[position]
     }
 

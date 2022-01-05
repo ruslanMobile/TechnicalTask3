@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 class SlidePageFragment(private var number: Int): Fragment() {
 
     private lateinit var buttonNotification:Button
-    private var counts:Int = 0
     private lateinit var mainViewModel:MainViewModel
 
     override fun onCreateView(
@@ -22,16 +21,12 @@ class SlidePageFragment(private var number: Int): Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
-        mainViewModel.liveDataModelResult.observe(requireActivity(), {
-            counts = it.size
-        })
 
         buttonNotification = view.findViewById(R.id.buttonCreateNotification)
         buttonNotification.setOnClickListener {
             mainViewModel.createNotificationChannel()
-            mainViewModel.createNotification(counts,number)
+            mainViewModel.createNotification(number)
         }
     }
 

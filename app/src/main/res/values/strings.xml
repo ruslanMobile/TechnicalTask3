@@ -5,4 +5,5 @@
     <string name="createNotification">Create new notification</string>
     <string name="youCreateNotification">You create a notification</string>
     <string name="notification">Notification</string>
+    <string name="preference_key">MyPreference</string>
 </resources>

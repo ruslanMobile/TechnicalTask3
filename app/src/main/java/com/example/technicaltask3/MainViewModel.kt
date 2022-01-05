@@ -17,7 +17,6 @@ import kotlin.random.Random
 class MainViewModel(private val context: Context) : ViewModel() {
     private val CHANNEL_ID = "notify_001"
     private val CHANNEL_NAME = "My main channel"
-    private val COUNT_PAGES = "countPages"
     private val NUMBER_OF_PAGE = "numberOfPage"
 
     private val mutableLiveDataModelResult: MutableLiveData<MutableList<SlidePageFragment>> =
@@ -26,6 +25,10 @@ class MainViewModel(private val context: Context) : ViewModel() {
 
     private val mutableLiveDataNotification: HashMap<Int, MutableList<Int>> = HashMap()
 
+    fun clearLists(){
+        mutableLiveDataNotification.clear()
+        mutableLiveDataModelResult.value?.clear()
+    }
     fun addFragment() {
         mutableLiveDataModelResult.run {
             var list = mutableLiveDataModelResult.value
@@ -56,16 +59,16 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    fun createNotification(counts: Int, number: Int) {
+    fun createNotification(number: Int) {
         val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            putExtra(COUNT_PAGES, counts)
+            //flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(NUMBER_OF_PAGE, number)
         }
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             context,
-            0,
+            Random.nextInt(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -99,6 +102,5 @@ class MainViewModel(private val context: Context) : ViewModel() {
             }
         }
         mutableLiveDataNotification.remove(sizeList)
-        Log.d("MyLog", " removeNotifications FINISH " + mutableLiveDataNotification.size)
     }
 }
