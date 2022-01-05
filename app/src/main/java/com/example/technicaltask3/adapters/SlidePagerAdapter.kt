@@ -1,10 +1,10 @@
-package com.example.technicaltask3
+package com.example.technicaltask3.adapters
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
+import com.example.technicaltask3.fragments.SlidePageFragment
 
 class SlidePagerAdapter(fa: FragmentActivity, private var list: List<SlidePageFragment>) : FragmentStateAdapter(fa) {
 

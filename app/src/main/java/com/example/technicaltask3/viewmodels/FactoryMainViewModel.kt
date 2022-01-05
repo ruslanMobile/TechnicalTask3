@@ -1,4 +1,4 @@
-package com.example.technicaltask3
+package com.example.technicaltask3.viewmodels
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

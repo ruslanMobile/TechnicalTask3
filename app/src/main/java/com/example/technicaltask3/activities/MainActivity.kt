@@ -1,26 +1,24 @@
-package com.example.technicaltask3
+package com.example.technicaltask3.activities
 
-import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import kotlin.math.sign
+import com.example.technicaltask3.R
+import com.example.technicaltask3.adapters.SlidePagerAdapter
+import com.example.technicaltask3.viewmodels.FactoryMainViewModel
+import com.example.technicaltask3.viewmodels.MainViewModel
 
 class MainActivity : AppCompatActivity() {
-    private val PREFERENCE_COUNT = "count"
 
     private lateinit var viewPager: ViewPager2
     private lateinit var buttonAdd: Button
     private lateinit var buttonRemove: Button
     private lateinit var textCount: TextView
     private lateinit var viewModel: MainViewModel
-    private var sizeList: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +35,9 @@ class MainActivity : AppCompatActivity() {
         val pagerAdapter = SlidePagerAdapter(this, listOf())
         viewPager.adapter = pagerAdapter
 
-        viewModel.liveDataModelResult.observe(this, {
+        viewModel.liveDataFragments.observe(this, {
             pagerAdapter.newList(it)
-            viewPager.currentItem = it.size.also { it2 -> sizeList = it.size }
+            viewPager.currentItem = it.size
 
             buttonRemove.run {
                 if (it.size > 1) this.visibility = View.VISIBLE
@@ -54,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.removeFragment()
         }
 
+        //Swipe viewPager
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -61,36 +60,24 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-
+        //Checks whether it is open from the notification
         var bundle: Bundle? = intent.extras
-        if (bundle != null) {
+        if (bundle != null && bundle.getInt("numberOfPage", 1) != 1) {
             for (i in 1 until bundle.getInt("numberOfPage", 1)) {
                 viewModel.addFragment()
             }
         } else {
-            val sharedPref =
-                getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE)
-            if (sharedPref != null) {
-                for (i in 1 until sharedPref.getInt(PREFERENCE_COUNT, 1)) {
-                    viewModel.addFragment()
-                }
-            }
+            viewModel.getPreferences()
         }
     }
 
+    //Save fragments
     override fun onStop() {
-        Log.d("MyLog", " onStop ")
-        val sharedPref =
-            getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putInt(PREFERENCE_COUNT, sizeList)
-            commit()
-        }
+        viewModel.savePreferences()
         super.onStop()
     }
 
     override fun onDestroy() {
-        Log.d("MyLog", " onDestroy ")
         viewModel.clearLists()
         super.onDestroy()
     }

@@ -1,4 +1,4 @@
-package com.example.technicaltask3
+package com.example.technicaltask3.viewmodels
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -6,42 +6,66 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.technicaltask3.activities.MainActivity
+import com.example.technicaltask3.R
+import com.example.technicaltask3.fragments.SlidePageFragment
 import kotlin.random.Random
 
 class MainViewModel(private val context: Context) : ViewModel() {
     private val CHANNEL_ID = "notify_001"
     private val CHANNEL_NAME = "My main channel"
     private val NUMBER_OF_PAGE = "numberOfPage"
+    private val PREFERENCE_COUNT = "count"
 
-    private val mutableLiveDataModelResult: MutableLiveData<MutableList<SlidePageFragment>> =
+    private val mutableLiveDataFragments: MutableLiveData<MutableList<SlidePageFragment>> =
         MutableLiveData(mutableListOf(SlidePageFragment(1)))
-    val liveDataModelResult: LiveData<MutableList<SlidePageFragment>> = mutableLiveDataModelResult
+    val liveDataFragments: LiveData<MutableList<SlidePageFragment>> = mutableLiveDataFragments
 
     private val mutableLiveDataNotification: HashMap<Int, MutableList<Int>> = HashMap()
 
     fun clearLists(){
         mutableLiveDataNotification.clear()
-        mutableLiveDataModelResult.value?.clear()
+        mutableLiveDataFragments.value?.clear()
     }
     fun addFragment() {
-        mutableLiveDataModelResult.run {
-            var list = mutableLiveDataModelResult.value
+        mutableLiveDataFragments.run {
+            var list = mutableLiveDataFragments.value
             list?.add(SlidePageFragment(list.size + 1))
             this.value = list
         }
     }
 
     fun removeFragment() {
-        mutableLiveDataModelResult.run {
-            var list = mutableLiveDataModelResult.value
+        mutableLiveDataFragments.run {
+            var list = mutableLiveDataFragments.value
             list?.removeLast()
             this.value = list
+        }
+    }
+
+    //Returns the number of saved fragments
+    fun getPreferences(){
+        val sharedPref =
+            context.getSharedPreferences(context.getString(R.string.preference_key), Context.MODE_PRIVATE)
+        if (sharedPref != null) {
+            for (i in 1 until sharedPref.getInt(PREFERENCE_COUNT, 1)) {
+                addFragment()
+            }
+        }
+    }
+
+    //Save fragments
+    fun savePreferences(){
+        val sharedPref =
+            context.getSharedPreferences(context.getString(R.string.preference_key), Context.MODE_PRIVATE)
+        with(sharedPref.edit()) {
+            putInt(PREFERENCE_COUNT, mutableLiveDataFragments.value?.size ?: 0)
+            commit()
         }
     }
 
@@ -91,10 +115,11 @@ class MainViewModel(private val context: Context) : ViewModel() {
         }
     }
 
+    //Delete notification when deleting a fragment
     fun removeNotifications() {
         val ns: String = Context.NOTIFICATION_SERVICE
         val nMgr = context.getSystemService(ns) as NotificationManager
-        var sizeList = liveDataModelResult.value?.size
+        var sizeList = liveDataFragments.value?.size
 
         if (mutableLiveDataNotification.containsKey(sizeList) && mutableLiveDataNotification[sizeList] != null) {
             for (i in mutableLiveDataNotification[sizeList]!!) {

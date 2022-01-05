@@ -1,4 +1,4 @@
-package com.example.technicaltask3
+package com.example.technicaltask3.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.technicaltask3.R
+import com.example.technicaltask3.viewmodels.MainViewModel
 
 class SlidePageFragment(private var number: Int): Fragment() {
 
     private lateinit var buttonNotification:Button
-    private lateinit var mainViewModel:MainViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
